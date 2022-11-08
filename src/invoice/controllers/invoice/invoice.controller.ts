@@ -8,7 +8,10 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { CreateInvoiceDto } from 'src/invoice/dto/invoice.dto';
+import {
+  CreateInvoiceDto,
+  updateInvoiceDto,
+} from 'src/invoice/dto/invoice.dto';
 import { InvoiceService } from 'src/invoice/services/invoice/invoice.service';
 
 @Controller('invoice')
@@ -28,13 +31,13 @@ export class InvoiceController {
     return this.invioceService.createInvoice(body);
   }
   @Put(':id')
-  updateCustumer(@Param('id') id: string, @Body() changes: CreateInvoiceDto) {
+  updateCustumer(@Param('id') id: string, @Body() changes: updateInvoiceDto) {
     return this.invioceService.updateInvoice(id, changes);
   }
   @Patch(':id')
   updateCustomerPatch(
     @Param('id') id: string,
-    @Body() changes: CreateInvoiceDto,
+    @Body() changes: updateInvoiceDto,
   ) {
     return this.invioceService.updateInvoicePatch(id, changes);
   }

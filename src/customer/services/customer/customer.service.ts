@@ -1,5 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { CreateCustomerDto } from 'src/customer/dto/customer.dto';
+import {
+  CreateCustomerDto,
+  UpdateCustomerDto,
+} from 'src/customer/dto/customer.dto';
 
 @Injectable()
 export class CustomerService {
@@ -22,7 +25,7 @@ export class CustomerService {
     this.customers.push(customer);
     return { message: 'CLIENTE CREADO EXITOSAMNETE', customer };
   }
-  updateCustomer(id: string, changes: CreateCustomerDto) {
+  updateCustomer(id: string, changes: UpdateCustomerDto) {
     const customer = this.getCustomerById(id);
     if (!customer) {
       return { message: 'CLIENTE NO EXISTE' };
@@ -33,7 +36,7 @@ export class CustomerService {
     customer.telefono = changes.telefono;
     return this.createCustomer(customer);
   }
-  updateCustomerPatch(id: string, changes: CreateCustomerDto) {
+  updateCustomerPatch(id: string, changes: UpdateCustomerDto) {
     const customer = this.getCustomerById(id);
     if (!customer) {
       return { message: 'CLIENTE NO EXISTE' };
