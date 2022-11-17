@@ -9,6 +9,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { CreateInvoiceDto } from 'src/invoice/dto/invoice.dto';
+import { Factura } from 'src/invoice/entity/envoice.entity';
 import { InvoiceService } from 'src/invoice/services/invoice/invoice.service';
 
 @Controller('invoice')
@@ -25,7 +26,8 @@ export class InvoiceController {
   }
   @Post()
   createCustomer(@Body() body: CreateInvoiceDto) {
-    return this.invioceService.createInvoice(body);
+    const factura = new Factura(body);
+    return this.invioceService.createInvoice(factura);
   }
   /* @Put(':id')
   updateCustumer(@Param('id') id: string, @Body() changes: updateInvoiceDto) {

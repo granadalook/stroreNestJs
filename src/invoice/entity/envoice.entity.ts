@@ -5,6 +5,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { IFactura } from '../dto/fatctura.dto';
 import { detail } from './detailInvoice.entity';
 
 @Entity({ name: 'factura' })
@@ -20,9 +21,26 @@ export class Factura {
   })
   FechaCreacion: Date;
 
-  @OneToMany(() => detail, (detalles) => detalles.idFactura, {
-    onUpdate: 'CASCADE',
-    onDelete: 'CASCADE',
+  @OneToMany(() => detail, (detalle) => detalle.envoice, {
+    cascade: ['insert', 'update'],
   })
-  detalles: detail[];
+  detalle: detail[];
+
+  constructor(data?: IFactura) {
+    if (data?.cliente) {
+      this.cliente = data.cliente;
+    }
+    if (data?.descripcion.length > 0) {
+      this.detalle = [];
+      data.descripcion.forEach((item) => {
+        this.detalle.push(new detail(item));
+      });
+    }
+    if (data?.id) {
+      this.id = data.id;
+    }
+    if (data?.FechaCreacion) {
+      this.FechaCreacion = data.FechaCreacion;
+    }
+  }
 }

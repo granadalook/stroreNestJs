@@ -1,47 +1,38 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Factura } from '../../entity/envoice.entity';
-import { CreateInvoiceDto } from 'src/invoice/dto/invoice.dto';
 import { Repository } from 'typeorm';
-import { DetailInvoiceService } from '../detail-invoice/detail-invoice.service';
 
 @Injectable()
 export class InvoiceService {
   constructor(
-    @InjectRepository(Factura) private factiraRepo: Repository<Factura>,
-    private detailService: DetailInvoiceService,
+    @InjectRepository(Factura) private facturaRepo: Repository<Factura>,
   ) {}
   async getAllInvoice() {
-    const facturas = await this.factiraRepo.find();
-    if (!facturas) {
+    const facturas = await this.facturaRepo.find();
+    if (facturas.length === 0) {
       throw new NotFoundException(`  NO HAY FACTURAS`);
     }
     return facturas;
   }
   async getInvoiceById(id: string) {
-    const factura = await this.factiraRepo.findOne({
+    const factura = await this.facturaRepo.findOne({
       where: { id: id },
-      relations: ['detalles'],
+      relations: ['detalle'],
     });
-    console.log('factura', factura);
     if (!factura) {
       throw new NotFoundException(`FACTURA ${id} NO EXISTE`);
     }
     return factura;
   }
 
-  async createInvoice(invoice: CreateInvoiceDto) {
-    const newFactura = this.factiraRepo.create(invoice);
-
-    const factur = await this.factiraRepo.save(newFactura);
-    if (invoice.descripcion) {
-      await this.detailService.createDetail(invoice.descripcion, factur.id);
-    }
-    return factur;
+  async createInvoice(invoice: Factura) {
+    return await this.facturaRepo.save(invoice);
   }
   async deleteInvoice(id: string) {
     const deleteFactura = await this.getInvoiceById(id);
-    return this.factiraRepo.delete(id);
+    this.facturaRepo.delete(deleteFactura.id);
+    return { message: 'FACTURA ELIMINADA', deleteFactura };
   }
   /*updateInvoice(id: string, changes: updateInvoiceDto) {
     const invoice = this.getInvoiceById(id);

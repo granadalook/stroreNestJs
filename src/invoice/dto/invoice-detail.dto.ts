@@ -1,6 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty } from 'class-validator';
-export class detailInvoiceDto {
+import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
+import { IDescripcion } from './descripcion.interface';
+export class detailInvoiceDto implements IDescripcion {
+  @IsOptional()
+  id: string;
+  @IsOptional()
+  idFactura: string;
   @IsNotEmpty({ message: 'EL CAMPO precio NO DEBE ESTAR  VACIO ' })
   @ApiProperty({ description: ' PRECIO DEL ARTICULO' })
   readonly precio: string;
