@@ -8,10 +8,7 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import {
-  CreateInvoiceDto,
-  updateInvoiceDto,
-} from 'src/invoice/dto/invoice.dto';
+import { CreateInvoiceDto } from 'src/invoice/dto/invoice.dto';
 import { InvoiceService } from 'src/invoice/services/invoice/invoice.service';
 
 @Controller('invoice')
@@ -23,14 +20,14 @@ export class InvoiceController {
     return this.invioceService.getAllInvoice();
   }
   @Get(':id')
-  getCustumerById(@Param('id') id: string) {
+  getInvoiceById(@Param('id') id: string) {
     return this.invioceService.getInvoiceById(id);
   }
   @Post()
   createCustomer(@Body() body: CreateInvoiceDto) {
     return this.invioceService.createInvoice(body);
   }
-  @Put(':id')
+  /* @Put(':id')
   updateCustumer(@Param('id') id: string, @Body() changes: updateInvoiceDto) {
     return this.invioceService.updateInvoice(id, changes);
   }
@@ -40,7 +37,7 @@ export class InvoiceController {
     @Body() changes: updateInvoiceDto,
   ) {
     return this.invioceService.updateInvoicePatch(id, changes);
-  }
+  }*/
   @Delete(':id')
   deleteCustomer(@Param('id') id: string) {
     return this.invioceService.deleteInvoice(id);

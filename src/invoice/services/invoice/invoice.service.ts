@@ -1,36 +1,49 @@
-import { Injectable } from '@nestjs/common';
-import {
-  CreateInvoiceDto,
-  updateInvoiceDto,
-} from 'src/invoice/dto/invoice.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Factura } from '../../entity/envoice.entity';
+import { CreateInvoiceDto } from 'src/invoice/dto/invoice.dto';
+import { Repository } from 'typeorm';
+import { DetailInvoiceService } from '../detail-invoice/detail-invoice.service';
 
 @Injectable()
 export class InvoiceService {
-  inviove = [
-    {
-      id: '1',
-      numero: 'juan',
-      factura: 'restrepo',
-      articulo: '123456789',
-      descripcion: {
-        precio: '124',
-        fecha: 'dsdssd',
-        articulo: 'dadsasd',
-        cantidad: 'dasd',
-      },
-    },
-  ];
-  getAllInvoice() {
-    return this.inviove;
+  constructor(
+    @InjectRepository(Factura) private factiraRepo: Repository<Factura>,
+    private detailService: DetailInvoiceService,
+  ) {}
+  async getAllInvoice() {
+    const facturas = await this.factiraRepo.find();
+    if (!facturas) {
+      throw new NotFoundException(`  NO HAY FACTURAS`);
+    }
+    return facturas;
   }
-  getInvoiceById(id: string) {
-    return this.inviove.find((inviove) => inviove.id === id);
+  async getInvoiceById(id: string) {
+    const factura = await this.factiraRepo.findOne({
+      where: { id: id },
+      relations: ['detalles'],
+    });
+    console.log('factura', factura);
+    if (!factura) {
+      throw new NotFoundException(`FACTURA ${id} NO EXISTE`);
+    }
+    return factura;
   }
 
-  createInvoice(invoice: CreateInvoiceDto) {
-    return this.inviove.push(invoice);
+  async createInvoice(invoice: CreateInvoiceDto) {
+    const newFactura = this.factiraRepo.create(invoice);
+
+    const factur = await this.factiraRepo.save(newFactura);
+    if (invoice.descripcion) {
+      await this.detailService.createDetail(invoice.descripcion, factur.id);
+    }
+    return factur;
   }
-  updateInvoice(id: string, changes: updateInvoiceDto) {
+  async deleteInvoice(id: string) {
+    const deleteFactura = await this.getInvoiceById(id);
+    return this.factiraRepo.delete(id);
+  }
+  /*updateInvoice(id: string, changes: updateInvoiceDto) {
     const invoice = this.getInvoiceById(id);
     if (!invoice) {
       return { message: 'CLIENTE NO EXISTE' };
@@ -52,15 +65,5 @@ export class InvoiceService {
     invoice.descripcion = changes.descripcion;
     return this.createInvoice(invoice);
   }
-  deleteInvoice(id: string) {
-    const invioceDelete = this.inviove.findIndex(
-      (customer) => customer.id === id,
-    );
-    const eliminado = this.inviove.splice(invioceDelete, 1);
-    return {
-      message: `INVOICE
-     ELIMINADO ${id} `,
-      eliminado,
-    };
-  }
+  */
 }

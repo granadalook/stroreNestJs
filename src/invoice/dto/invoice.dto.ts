@@ -1,14 +1,16 @@
-/* eslint-disable prettier/prettier */
-
-import { PartialType } from '@nestjs/swagger';
+import { IsString, IsNotEmpty, ValidateNested } from 'class-validator';
+import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { detailInvoiceDto } from './invoice-detail.dto';
+import { Type } from 'class-transformer';
 
-/* eslint-disable prettier/prettier */
 export class CreateInvoiceDto {
-  readonly id: string;
-  readonly numero: string;
-  readonly factura: string;
-  readonly articulo: string;
+  @IsString()
+  @IsNotEmpty({ message: 'EL CAMPO cliente NO DEBE ESTAR  VACIO ' })
+  @ApiProperty({ description: 'NOMBRE DEL CLIENTE' })
+  readonly cliente: string;
+  @ValidateNested()
+  @Type(() => detailInvoiceDto)
+  @ApiProperty({ description: 'DESCRIPCION DE LA FACTURA' })
   readonly descripcion: detailInvoiceDto;
 }
 export class updateInvoiceDto extends PartialType(CreateInvoiceDto) {}

@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: estorenestjs
+      POSTGRES_USER: estore
+      POSTGRES_PASSWORD: estore
+    ports:
+      - 5434:5432
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
