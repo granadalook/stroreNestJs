@@ -5,7 +5,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { IFactura } from '../dto/fatctura.dto';
+import { IFactura } from '../interface/fatctura.interface';
 import { detail } from './detailInvoice.entity';
 
 @Entity({ name: 'factura' })

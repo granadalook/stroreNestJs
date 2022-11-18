@@ -2,6 +2,10 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Factura } from '../../entity/envoice.entity';
 import { Repository } from 'typeorm';
+import {
+  CreateInvoiceDto,
+  updateInvoiceDto,
+} from 'src/invoice/dto/invoice.dto';
 
 @Injectable()
 export class InvoiceService {
@@ -29,32 +33,19 @@ export class InvoiceService {
   async createInvoice(invoice: Factura) {
     return await this.facturaRepo.save(invoice);
   }
+  async updateInvoice(id: string, changes: CreateInvoiceDto) {
+    const invoice = await this.getInvoiceById(id);
+    this.facturaRepo.merge(invoice, changes);
+    return this.facturaRepo.save(invoice);
+  }
+  async updateInvoicePatch(id: string, changes: updateInvoiceDto) {
+    const invoice = await this.getInvoiceById(id);
+    this.facturaRepo.merge(invoice, changes);
+    return this.facturaRepo.save(invoice);
+  }
   async deleteInvoice(id: string) {
     const deleteFactura = await this.getInvoiceById(id);
     this.facturaRepo.delete(deleteFactura.id);
     return { message: 'FACTURA ELIMINADA', deleteFactura };
   }
-  /*updateInvoice(id: string, changes: updateInvoiceDto) {
-    const invoice = this.getInvoiceById(id);
-    if (!invoice) {
-      return { message: 'CLIENTE NO EXISTE' };
-    }
-    invoice.id = changes.id;
-    invoice.numero = changes.numero;
-    invoice.articulo = changes.articulo;
-    invoice.descripcion = changes.descripcion;
-    return this.createInvoice(invoice);
-  }
-  updateInvoicePatch(id: string, changes: updateInvoiceDto) {
-    const invoice = this.getInvoiceById(id);
-    if (!invoice) {
-      return { message: 'CLIENTE NO EXISTE' };
-    }
-    invoice.id = changes.id;
-    invoice.numero = changes.numero;
-    invoice.articulo = changes.articulo;
-    invoice.descripcion = changes.descripcion;
-    return this.createInvoice(invoice);
-  }
-  */
 }

@@ -6,11 +6,11 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { IDescripcion } from '../dto/descripcion.interface';
+import { IDescripcion } from '../interface/descripcion.interface';
 import { Factura } from './envoice.entity';
 
 @Entity({ name: 'detail' })
-@Index('julianLasso', ['articulo', 'idFactura'], { unique: true })
+@Index('INDEX UNICO', ['articulo', 'idFactura'], { unique: true })
 export class detail {
   @PrimaryGeneratedColumn('uuid')
   id: string;

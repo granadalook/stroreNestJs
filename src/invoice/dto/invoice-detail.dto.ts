@@ -1,6 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
-import { IDescripcion } from './descripcion.interface';
+import { IDescripcion } from '../interface/descripcion.interface';
 export class detailInvoiceDto implements IDescripcion {
   @IsOptional()
   id: string;
@@ -18,3 +18,5 @@ export class detailInvoiceDto implements IDescripcion {
   @ApiProperty({ description: 'CANTIDAD DE ARTICULOS' })
   readonly cantidad: string;
 }
+
+export class updatedetailDto extends PartialType(detailInvoiceDto) {}

@@ -7,7 +7,7 @@ import {
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { detailInvoiceDto } from './invoice-detail.dto';
 import { Type } from 'class-transformer';
-import { IFactura } from './fatctura.dto';
+import { IFactura } from '../interface/fatctura.interface';
 
 export class CreateInvoiceDto implements IFactura {
   @IsOptional()
