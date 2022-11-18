@@ -1,14 +1,16 @@
 import {
   Column,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { detailInvoiceDto } from '../dto/invoice-detail.dto';
+import { IDescripcion } from '../dto/descripcion.interface';
 import { Factura } from './envoice.entity';
 
 @Entity({ name: 'detail' })
+@Index('julianLasso', ['articulo', 'idFactura'], { unique: true })
 export class detail {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -27,7 +29,7 @@ export class detail {
   })
   @JoinColumn([{ name: 'idFactura', referencedColumnName: 'id' }])
   envoice: Factura;
-  constructor(data?: detailInvoiceDto) {
+  constructor(data?: IDescripcion) {
     if (data?.articulo) {
       this.articulo = data.articulo;
     }
